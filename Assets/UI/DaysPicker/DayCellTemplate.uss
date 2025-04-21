@@ -1,0 +1,17 @@
+#day-cell {
+    flex-grow: 1;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    font-size: 40px;
+    -unity-text-align: middle-center;
+}
+
+#day-header {
+    flex-grow: 1;
+    -unity-text-align: middle-center;
+    font-size: 40px;
+}
+
+.selected {
+    background-color: rgb(37, 99, 235);
+}

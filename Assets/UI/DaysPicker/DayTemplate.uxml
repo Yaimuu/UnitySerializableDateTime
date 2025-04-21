@@ -1,0 +1,5 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/DaysPicker/DayTemplate.uss?fileID=7433441132597879392&amp;guid=ae76c0bee766e634bb785f1cedd583c9&amp;type=3#DayTemplate" />
+    <Style src="project://database/Assets/UI/General.uss?fileID=7433441132597879392&amp;guid=e8c64b81dcf91db47aaff7e0618f7c59&amp;type=3#General" />
+    <engine:Label text="1" name="day-cell" style="background-color: rgba(64, 64, 64, 0.5);" />
+</engine:UXML>

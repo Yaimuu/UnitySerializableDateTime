@@ -1,0 +1,15 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/DaysPicker/DaysPicker.uss?fileID=7433441132597879392&amp;guid=cbbfb594b62236f4da86b642f2a3442e&amp;type=3#DaysPicker" />
+    <Style src="project://database/Assets/UI/General.uss?fileID=7433441132597879392&amp;guid=e8c64b81dcf91db47aaff7e0618f7c59&amp;type=3#General" />
+    <engine:MultiColumnListView style="flex-grow: 1;">
+        <engine:Columns reorderable="false" resizable="false">
+            <engine:Column title="Mo" stretchable="true" width="auto" name="day-1" />
+            <engine:Column title="Tu" stretchable="true" width="auto" name="day-2" />
+            <engine:Column title="We" width="auto" stretchable="true" name="day-3" />
+            <engine:Column title="Th" width="auto" stretchable="true" name="day-4" />
+            <engine:Column title="Fr" stretchable="true" width="auto" name="day-5" />
+            <engine:Column title="Sa" stretchable="true" name="day-6" />
+            <engine:Column title="Su" stretchable="true" name="day-7" />
+        </engine:Columns>
+    </engine:MultiColumnListView>
+</engine:UXML>
