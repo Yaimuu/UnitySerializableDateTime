@@ -1,24 +1,28 @@
 using System;
 using UnityEngine;
 
-namespace DateTimePicker
+namespace SerializableDateTime
 {
     [Serializable]
     public class SerializableDateTime
     {
-        [SerializeField] private string exposedDate;
-        private DateTime dateTime;
+        [SerializeField] private string dateInput = DateTime.Now.ToString("o");
+        private DateTime dateTime = DateTime.Now;
 
         public DateTime DateTime
         {
             get => dateTime;
-            set => dateTime = value;
+            set
+            {
+                dateTime = value;
+                dateInput = dateTime.ToString("o");
+            } 
         }
 
         public string ExposedDate
         {
-            get => exposedDate;
-            set => exposedDate = value;
+            get => dateInput;
+            set => dateInput = value;
         }
     }
 }

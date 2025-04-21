@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
->
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/DateTimePicker.uss?fileID=7433441132597879392&amp;guid=ceeaa427594a3d14bb7afe9b561a4487&amp;type=3#DateTimePicker" />
-	<engine:Label text="Hello World! From UXML" />
-	<engine:Label class="custom-label" text="Hello World! With Style" />
-
+    <Style src="project://database/Assets/UI/General.uss?fileID=7433441132597879392&amp;guid=e8c64b81dcf91db47aaff7e0618f7c59&amp;type=3#General" />
+    <engine:GroupBox style="flex-direction: row; align-items: center; justify-content: space-evenly;">
+        <engine:Button text="←" class="nav-left-arrow nav-arrow" />
+        <engine:Label text="Date" name="title" />
+        <engine:Button text="→" class="nav-right-arrow nav-arrow" />
+    </engine:GroupBox>
+    <engine:GroupBox />
 </engine:UXML>

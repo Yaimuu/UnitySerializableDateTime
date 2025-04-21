@@ -2,17 +2,21 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DateTimePicker
+namespace SerializableDateTime
 {
-    public class DateTimePicker : EditorWindow
+    public class DateTimePickerWindow : EditorWindow
     {
+        private static DateTimePickerWindow Instance { get; set; }
+
+        public static bool IsOpen => Instance != null;
+
         [SerializeField]
-        private VisualTreeAsset m_VisualTreeAsset = default;
+        private VisualTreeAsset m_VisualTreeAsset;
 
         [MenuItem("Window/UI Toolkit/DateTimePicker")]
         public static void ShowExample()
         {
-            DateTimePicker wnd = GetWindow<DateTimePicker>();
+            DateTimePickerWindow wnd = GetWindow<DateTimePickerWindow>();
             wnd.titleContent = new GUIContent("DateTimePicker");
         }
 
@@ -21,13 +25,13 @@ namespace DateTimePicker
             // Each editor window contains a root VisualElement object
             VisualElement root = rootVisualElement;
 
-            // VisualElements objects can contain other VisualElement following a tree hierarchy.
-            VisualElement label = new Label("Hello World! From C#");
-            root.Add(label);
-
             // Instantiate UXML
             VisualElement labelFromUXML = m_VisualTreeAsset.Instantiate();
             root.Add(labelFromUXML);
+        }
+        
+        void OnEnable() {
+            Instance = this;
         }
     }
 }
