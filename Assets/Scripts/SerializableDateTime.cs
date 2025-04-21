@@ -7,15 +7,15 @@ namespace SerializableDateTime
     public class SerializableDateTime
     {
         [SerializeField] private string dateInput = DateTime.Now.ToString("o");
-        private DateTime dateTime = DateTime.Now;
+        private DateTime _dateTime = DateTime.Now;
 
         public DateTime DateTime
         {
-            get => dateTime;
+            get => _dateTime;
             set
             {
-                dateTime = value;
-                dateInput = dateTime.ToString("o");
+                _dateTime = value;
+                dateInput = _dateTime.ToString("o");
             } 
         }
 

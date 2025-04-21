@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 namespace SerializableDateTime
@@ -11,7 +12,7 @@ namespace SerializableDateTime
         public static bool IsOpen => Instance != null;
 
         [SerializeField]
-        private VisualTreeAsset m_VisualTreeAsset;
+        private VisualTreeAsset visualTreeAsset;
 
         [MenuItem("Window/UI Toolkit/DateTimePicker")]
         public static void ShowExample()
@@ -26,7 +27,7 @@ namespace SerializableDateTime
             VisualElement root = rootVisualElement;
 
             // Instantiate UXML
-            VisualElement labelFromUXML = m_VisualTreeAsset.Instantiate();
+            VisualElement labelFromUXML = visualTreeAsset.Instantiate();
             root.Add(labelFromUXML);
         }
         
