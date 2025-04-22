@@ -16,7 +16,7 @@ namespace SerializableDateTime
             {
                 _dateTime = value;
                 dateInput = _dateTime.ToString("o");
-            } 
+            }
         }
 
         public string ExposedDate

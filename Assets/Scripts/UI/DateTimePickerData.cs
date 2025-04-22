@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using SerializableDateTime.Extensions;
+using UnityEngine;
+
+namespace SerializableDateTime.UI
+{
+    [Serializable]
+    public class DateTimeCellData : ScriptableObject
+    {
+        public string dateValue;
+    }
+    
+    [Serializable]
+    public class DateTimeRowData
+    {
+        public List<DateTimeCellData> cells;
+
+        public DateTimeRowData(List<int> row)
+        {
+            cells = row.ConvertAll(cellValue =>
+            {
+                DateTimeCellData cell = ScriptableObject.CreateInstance<DateTimeCellData>();
+                cell.dateValue = cellValue.ToString();
+                return cell;
+            });
+        }
+    }
+    
+    public class DateTimePickerData : ScriptableObject
+    {
+        public string title = "Date";
+        public List<DateTimeRowData> values = new();
+
+        public void Init(DateTime newDate)
+        {
+            List<List<int>> newValues = newDate.GenerateCalendarMatrix();
+            values.Clear();
+            values = newValues.ConvertAll(row => new DateTimeRowData(row));
+            title = $"{newDate:MMMM} {newDate:yyyy}";
+            Debug.Log(title);
+        }
+    }
+}

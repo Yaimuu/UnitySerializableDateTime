@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializableDateTime:
-    dateInput: 2025-04-21T00:00:00.0000000
+    dateInput: 23/02/2025
 --- !u!4 &1357034946
 Transform:
   m_ObjectHideFlags: 0

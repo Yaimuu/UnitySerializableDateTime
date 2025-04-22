@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace SerializableDateTime
@@ -7,16 +8,17 @@ namespace SerializableDateTime
     [CustomPropertyDrawer(typeof(SerializableDateTime))]
     public class SerializableDateTimeEditor : PropertyDrawer
     {
-        private DateTime lastValidDateTime;
+        public static event UnityAction<DateTime> OnValueChanged;
+        private DateTime _lastValidDateTime;
         
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var root = new VisualElement();
 
             // Locate the 'dateInput' property
-            var dateInputProp = property.FindPropertyRelative("dateInput");
+            SerializedProperty dateInputProp = property.FindPropertyRelative("dateInput");
 
-            var textField = new TextField("Date (ISO 8601)")
+            var textField = new TextField(property.displayName)
             {
                 value = dateInputProp.stringValue
             };
@@ -28,23 +30,24 @@ namespace SerializableDateTime
                 property.serializedObject.ApplyModifiedProperties();
             });
 
-            textField.RegisterCallback<ClickEvent>((evt) =>
+            textField.RegisterCallback<ClickEvent>((_) =>
             {
                 if(!DateTimePickerWindow.IsOpen)
                     EditorApplication.ExecuteMenuItem("Window/UI Toolkit/DateTimePicker");
             });
             
-            textField.RegisterCallback<FocusOutEvent>((evt) =>
+            textField.RegisterCallback<FocusOutEvent>((_) =>
             {
                 // Optional: try to parse and log result
                 if (DateTime.TryParse(textField.value, null, System.Globalization.DateTimeStyles.RoundtripKind, out var parsed))
                 {
-                    lastValidDateTime = new DateTime(parsed.Year, parsed.Month, parsed.Day, parsed.Hour, parsed.Minute, 0);
+                    _lastValidDateTime = new DateTime(parsed.Year, parsed.Month, parsed.Day, parsed.Hour, parsed.Minute, 0);
+                    OnValueChanged?.Invoke(_lastValidDateTime);
                 }
                 else
                 {
                     // Invalid date format
-                    textField.value = lastValidDateTime.ToString("o");
+                    textField.value = _lastValidDateTime.ToString("o");
                 }
             });
 

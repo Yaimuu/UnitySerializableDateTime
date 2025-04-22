@@ -1,6 +1,7 @@
+using System;
+using SerializableDateTime.UI;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 namespace SerializableDateTime
@@ -11,6 +12,8 @@ namespace SerializableDateTime
 
         public static bool IsOpen => Instance != null;
 
+        private DateTimePickerUI _dateTimePickerUI;
+
         [SerializeField]
         private VisualTreeAsset visualTreeAsset;
 
@@ -19,20 +22,31 @@ namespace SerializableDateTime
         {
             DateTimePickerWindow wnd = GetWindow<DateTimePickerWindow>();
             wnd.titleContent = new GUIContent("DateTimePicker");
+            SerializableDateTimeEditor.OnValueChanged += Instance.OnNewDate;
         }
 
         public void CreateGUI()
         {
             // Each editor window contains a root VisualElement object
             VisualElement root = rootVisualElement;
+            
+            _dateTimePickerUI = new DateTimePickerUI(visualTreeAsset.Instantiate());
 
-            // Instantiate UXML
-            VisualElement labelFromUXML = visualTreeAsset.Instantiate();
-            root.Add(labelFromUXML);
+            root.Add(_dateTimePickerUI.Root);
+        }
+
+        void OnNewDate(DateTime newDate)
+        {
+            _dateTimePickerUI.UpdateMonthDaysList(newDate);
         }
         
         void OnEnable() {
             Instance = this;
+        }
+
+        void OnDisable()
+        {
+            SerializableDateTimeEditor.OnValueChanged -= OnNewDate;
         }
     }
 }
