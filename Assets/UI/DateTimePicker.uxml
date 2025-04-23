@@ -3,7 +3,7 @@
     <engine:Template name="YearsPickerComponent" src="project://database/Assets/UI/YearsPickerComponent.uxml?fileID=9197481963319205126&amp;guid=b20ab1122df02a747bf9d8ad80c08cc1&amp;type=3#YearsPickerComponent" />
     <Style src="project://database/Assets/UI/DateTimePicker.uss?fileID=7433441132597879392&amp;guid=ceeaa427594a3d14bb7afe9b561a4487&amp;type=3#DateTimePicker" />
     <Style src="project://database/Assets/UI/General.uss?fileID=7433441132597879392&amp;guid=e8c64b81dcf91db47aaff7e0618f7c59&amp;type=3#General" />
-    <engine:GroupBox picking-mode="Ignore" name="nav" style="flex-direction: row; justify-content: space-around;">
+    <engine:GroupBox name="nav" style="flex-direction: row; justify-content: space-around;">
         <engine:GroupBox picking-mode="Ignore" class="nav-group">
             <engine:Button text="←" name="nav-left-arrow" class="nav-left-arrow nav-arrow" />
         </engine:GroupBox>

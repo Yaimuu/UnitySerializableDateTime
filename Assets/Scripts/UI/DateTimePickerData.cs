@@ -34,11 +34,10 @@ namespace SerializableDateTime.UI
 
         public void Init(DateTime newDate)
         {
-            List<List<int>> newValues = newDate.GenerateCalendarMatrix();
+            var newValues = newDate.GenerateCalendarMatrix();
             values.Clear();
             values = newValues.ConvertAll(row => new DateTimeRowData(row));
             title = $"{newDate:MMMM} {newDate:yyyy}";
-            Debug.Log(title);
         }
     }
 }

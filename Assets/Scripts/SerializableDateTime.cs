@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using UnityEngine;
 
 namespace SerializableDateTime
@@ -6,7 +7,7 @@ namespace SerializableDateTime
     [Serializable]
     public class SerializableDateTime
     {
-        [SerializeField] private string dateInput = DateTime.Now.ToString("o");
+        [SerializeField] private string dateInput = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         private DateTime _dateTime = DateTime.Now;
 
         public DateTime DateTime
@@ -15,7 +16,7 @@ namespace SerializableDateTime
             set
             {
                 _dateTime = value;
-                dateInput = _dateTime.ToString("o");
+                dateInput = _dateTime.ToString(CultureInfo.InvariantCulture);
             }
         }
 
