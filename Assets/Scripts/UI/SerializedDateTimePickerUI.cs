@@ -1,0 +1,221 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UIElements;
+
+namespace SerializableDateTime.UI
+{
+    enum CalendarScope
+    {
+        Time,
+        Month,
+        Year,
+        Decade,
+        Century
+    }
+    public class SerializedDateTimePickerUI : BaseDateTimePickerUI
+    {
+        private CalendarScope _scope = CalendarScope.Month;
+        private CalendarScope Scope
+        {
+            get => _scope;
+            set
+            {
+                _scope = value;
+                if(_scope == CalendarScope.Century) return;
+                switch (_scope)
+                {
+                    case CalendarScope.Month:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private const string YearsPickerId = "years-picker";
+        private const string NavTitleId = "nav-title";
+        private const string NavLeftArrowId = "nav-left-arrow";
+        private const string NavRightArrowId = "nav-right-arrow";
+        private const string TextFieldInputId = "serialized-date-input";
+        private const string CalendarContainerId = "calendar-container";
+        
+        private TextField _dateInput;
+
+        private MonthlyCalendarUI _monthlyCalendarUI;
+        private MultiColumnListView _yearsPicker;
+
+        private Button _scopeButton;
+        private Button _nextButton;
+        private Button _previousButton;
+        
+        private VisualElement _calendarContainer;
+        
+        private readonly SerializedProperty _serializedProperty;
+        
+        private DateTime _lastValidDateTime;
+
+        public DateTime LastValidDateTime
+        {
+            get => _lastValidDateTime;
+            private set
+            {
+                _lastValidDateTime = value;
+                DateTimePickerData.UpdateCalendar(_lastValidDateTime);
+                _dateInput.value = LastValidDateTime.ToString(CultureInfo.CurrentCulture);
+            }
+        }
+        
+        public event UnityAction<DateTime> DateChanged;
+
+        private SerializedDateTimePickerUI(TemplateContainer template) : base(template) { }
+
+        public SerializedDateTimePickerUI(TemplateContainer template, SerializedProperty property) :
+            this(template)
+        {
+            Init();
+            
+            _serializedProperty = property;
+            
+            SerializedProperty dateInputProp = _serializedProperty.FindPropertyRelative("dateInput");
+            
+            _dateInput.label = _serializedProperty.displayName;
+            _dateInput.value = dateInputProp.stringValue;
+
+            InitInputEvents();
+            
+            if(dateInputProp.stringValue == string.Empty)
+                _dateInput.value = DateTime.Today.ToString(CultureInfo.CurrentCulture);
+
+            if (DateTime.TryParse(_dateInput.value, null, DateTimeStyles.AssumeUniversal, out var parsed))
+            {
+                LastValidDateTime = parsed;
+            }
+            
+            _monthlyCalendarUI = new MonthlyCalendarUI(template, LastValidDateTime);
+
+            _monthlyCalendarUI.DaySelected += OnDaySelected;
+        }
+
+        void Init()
+        {
+            Root.BringToFront();
+            _yearsPicker = Root.Q<MultiColumnListView>(YearsPickerId);
+            
+            _nextButton = Root.Q<Button>(NavRightArrowId);
+            _previousButton = Root.Q<Button>(NavLeftArrowId);
+            _scopeButton = Root.Q<Button>(NavTitleId);
+            _scopeButton.bindingPath = "title";
+            _scopeButton.Bind(new SerializedObject(DateTimePickerData));
+            
+            _dateInput = Root.Q<TextField>(TextFieldInputId);
+            
+            _calendarContainer = Root.Q<VisualElement>(CalendarContainerId);
+            HideCalendar();
+        }
+
+        void InitInputEvents()
+        {
+            _dateInput.RegisterValueChangedCallback(evt =>
+            {
+                SerializedProperty dateInputProp = _serializedProperty.FindPropertyRelative("dateInput");
+                // Update serialized property
+                dateInputProp.stringValue = evt.newValue;
+                _serializedProperty.serializedObject.ApplyModifiedProperties();
+            });
+
+            _dateInput.RegisterCallback<ClickEvent>((_) =>
+            {
+                ShowCalendar();
+            });
+            
+            // Text field has been overriden
+            _dateInput.RegisterCallback<FocusOutEvent>((_) =>
+            {
+                // Optional: try to parse and log result
+                if (DateTime.TryParse(_dateInput.value, null, DateTimeStyles.AssumeLocal, out var parsed))
+                {
+                    LastValidDateTime = new DateTime(parsed.Year, parsed.Month, parsed.Day, parsed.Hour, parsed.Minute, 0);
+                    _monthlyCalendarUI.UpdateMonthlyCalendar(LastValidDateTime);
+                }
+                else
+                {
+                    // Invalid date format
+                    _dateInput.value = LastValidDateTime.ToString(CultureInfo.CurrentCulture);
+                }
+            });
+            
+            _calendarContainer.RegisterCallback<ClickEvent>((_) =>
+            {
+                _calendarContainer.Focus();
+            });
+            
+            _calendarContainer.RegisterCallback<FocusOutEvent>((_) =>
+            {
+                HideCalendar();
+            });
+            
+            _calendarContainer.RegisterCallback<FocusInEvent>((_) =>
+            {
+                ShowCalendar();
+            });
+            
+            _nextButton.clickable = new Clickable(() =>
+            {
+                LastValidDateTime = LastValidDateTime.AddMonths(1);
+                _monthlyCalendarUI.Init(LastValidDateTime);
+                DateChanged?.Invoke(LastValidDateTime);
+            });
+            
+            _previousButton.clickable = new Clickable(() =>
+            {
+                LastValidDateTime = LastValidDateTime.AddMonths(-1);
+                _monthlyCalendarUI.Init(LastValidDateTime);
+                DateChanged?.Invoke(LastValidDateTime);
+            });
+
+            _scopeButton.clickable = new Clickable((() =>
+            {
+                Scope = Scope switch
+                {
+                    CalendarScope.Time => CalendarScope.Month,
+                    CalendarScope.Month => CalendarScope.Year,
+                    CalendarScope.Year => CalendarScope.Decade,
+                    CalendarScope.Decade => CalendarScope.Century,
+                    _ => Scope
+                };
+            }));
+        }
+
+        void ShowCalendar()
+        {
+            _calendarContainer.style.display = DisplayStyle.Flex;
+        }
+
+        void HideCalendar()
+        {
+            _calendarContainer.style.display = DisplayStyle.None;
+        }
+
+        void UpdateCalendar()
+        {
+            _scopeButton.text = DateTimePickerData.title;
+        }
+
+        void UpdateInput()
+        {
+            
+        }
+        
+        private void OnDaySelected(DateTime newDate)
+        {
+            LastValidDateTime = newDate;
+            
+        }
+    }
+}

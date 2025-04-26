@@ -32,7 +32,7 @@ namespace SerializableDateTime.UI
         public string title = "Date";
         public List<DateTimeRowData> values = new();
 
-        public void Init(DateTime newDate)
+        public void UpdateCalendar(DateTime newDate)
         {
             var newValues = newDate.GenerateCalendarMatrix();
             values.Clear();

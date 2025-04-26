@@ -17,11 +17,11 @@ namespace SerializableDateTime.Extensions
             // Go back to the Sunday (or Monday if you want ISO 8601) before the 1st
             DateTime startDate = firstOfMonth.AddDays(-daysBefore);
 
-            for (int week = 0; week < 6; week++)
+            for (var week = 0; week < 6; week++)
             {
                 List<int> weekRow = new();
 
-                for (int day = 0; day < 7; day++)
+                for (var day = 0; day < 7; day++)
                 {
                     weekRow.Add(startDate.Day);
                     startDate = startDate.AddDays(1);

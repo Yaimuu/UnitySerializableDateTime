@@ -1,9 +1,9 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:Template name="DateTimePicker" src="project://database/Assets/UI/DateTimePicker.uxml?fileID=9197481963319205126&amp;guid=3ad6e665193a9064c8142e752f8ed5c9&amp;type=3#DateTimePicker" />
-    <Style src="project://database/Assets/UI/DateTimePicker.uss?fileID=7433441132597879392&amp;guid=ceeaa427594a3d14bb7afe9b561a4487&amp;type=3#DateTimePicker" />
     <Style src="project://database/Assets/UI/General.uss?fileID=7433441132597879392&amp;guid=e8c64b81dcf91db47aaff7e0618f7c59&amp;type=3#General" />
-    <engine:GroupBox picking-mode="Ignore">
+    <Style src="project://database/Assets/UI/DateTimePicker.uss?fileID=7433441132597879392&amp;guid=ceeaa427594a3d14bb7afe9b561a4487&amp;type=3#DateTimePicker" />
+    <engine:GroupBox>
         <engine:TextField label="Text Field" placeholder-text="filler text" name="serialized-date-input" class="date-input" />
-        <engine:Instance template="DateTimePicker" name="calendar-container" class="serialized-calendar-container" />
+        <engine:Instance template="DateTimePicker" name="calendar-container" focusable="true" class="serialized-calendar-container" />
     </engine:GroupBox>
 </engine:UXML>

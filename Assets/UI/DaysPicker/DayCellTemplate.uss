@@ -1,9 +1,12 @@
 #day-cell {
     flex-grow: 1;
     -unity-font-style: bold;
-    color: rgb(255, 255, 255);
     font-size: 14px;
     -unity-text-align: middle-center;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
 }
 
 #titleLabel {
@@ -14,4 +17,8 @@
 
 .selected {
     background-color: rgb(37, 99, 235);
+}
+
+.disabled {
+    color: rgb(67, 67, 67);
 }
