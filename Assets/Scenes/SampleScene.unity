@@ -455,8 +455,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c835469e9b67de34aac5957b6757380a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializableDateTime:
-    dateInput: 08/04/2025 11:00:00
+  serializedDateTime:
+    dateInput: 19/11/2025 19:00:00
 --- !u!4 &1357034946
 Transform:
   m_ObjectHideFlags: 0
