@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SerializedDateTime.Extensions
+namespace SerializedCalendar.Extension
 {
     public static class DateTimeExtensions
     {

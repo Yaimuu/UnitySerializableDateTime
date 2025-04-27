@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
-namespace SerializedDateTime.UI
+namespace SerializedCalendar.UI
 {
     public class MonthlyCalendarUI : BaseDateTimePickerUI
     {

@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 #endif
 
-namespace SerializedDateTime.UI
+namespace SerializedCalendar.UI
 {
     enum CalendarScope
     {

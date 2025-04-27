@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using UnityEngine;
 
-namespace SerializedDateTime
+namespace SerializedCalendar
 {
     [Serializable]
     public class SerializedDateTime

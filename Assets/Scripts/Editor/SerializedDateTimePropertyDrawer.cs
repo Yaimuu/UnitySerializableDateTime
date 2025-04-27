@@ -1,9 +1,9 @@
-using SerializedDateTime.UI;
+using SerializedCalendar.UI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace SerializedDateTime
+namespace SerializedCalendar
 {
     [CustomPropertyDrawer(typeof(SerializedDateTime))]
     public class SerializedDateTimePropertyDrawer : PropertyDrawer

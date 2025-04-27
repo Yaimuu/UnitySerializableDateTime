@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using SerializedDateTime.Extensions;
+using SerializedCalendar.Extension;
 using UnityEngine;
 
-namespace SerializedDateTime.UI
+namespace SerializedCalendar.UI
 {
     [Serializable]
     public class DateTimeCellData : ScriptableObject
