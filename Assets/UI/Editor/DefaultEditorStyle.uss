@@ -1,8 +1,8 @@
 .nav-arrow {
     font-size: var(--calendar-font-size);
     -unity-font-style: bold;
-    width: 50px;
-    height: 50px;
+    width: 25px;
+    height: 25px;
     flex-grow: 0;
     flex-shrink: 0;
     background-color: var(--calendar-nav-button-background);
@@ -11,14 +11,14 @@
 }
 
 .nav-arrow:hover {
-    background-color: var(--calendar-nav-button-hover-background)
+    background-color: var(--calendar-nav-button-hover-background);
 }
 
-.calendar-root > Button:active {
+#nav Button:active {
     border-width: 2px;
 }
 
-.calendar-root > Button {
+#nav Button {
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     background-color: rgba(0, 0, 0, 0);

@@ -8,22 +8,11 @@ namespace SerializedCalendar
     public class SerializedDateTime
     {
         [SerializeField] private string dateInput = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-        private DateTime _dateTime = DateTime.Now;
 
-        public DateTime DateTime
+        public DateTime Date
         {
-            get => _dateTime;
-            set
-            {
-                _dateTime = value;
-                dateInput = _dateTime.ToString(CultureInfo.InvariantCulture);
-            }
-        }
-
-        public string ExposedDate
-        {
-            get => dateInput;
-            set => dateInput = value;
+            get => DateTime.Parse(dateInput);
+            set => dateInput = value.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

@@ -12,9 +12,6 @@ namespace SerializedCalendar.UI
 {
     public class MonthlyCalendarUI : BaseDateTimePickerUI
     {
-        private const string DaysPickerId = "days-picker";
-        private const string DayCellId = "day-cell";
-        
         private MultiColumnListView _daysPicker;
 
         public MultiColumnListView DaysPicker => _daysPicker;
@@ -30,7 +27,7 @@ namespace SerializedCalendar.UI
         {
             DateTimePickerData.UpdateCalendar(date);
             
-            _daysPicker = Root.Q<MultiColumnListView>(DaysPickerId);
+            _daysPicker = Root.Q<MultiColumnListView>(UIConstants.DaysPickerId);
             _daysPicker.bindingPath = "values";
             _daysPicker.columns.Clear();
 
@@ -53,12 +50,12 @@ namespace SerializedCalendar.UI
                     resizable = false,
                     headerTemplate =
                         AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                            "Assets/UI/MonthlyCalendar/DayHeaderCellTemplate.uxml"),
+                            "Assets/UI/Calendars/HeaderCellTemplate.uxml"),
                     cellTemplate =
-                        AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/MonthlyCalendar/DayTemplate.uxml"),
+                        AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml"),
                     bindCell = (element, rowIndex) =>
                     {
-                        var cellButton = element.Q<Button>(DayCellId);
+                        var cellButton = element.Q<Button>(UIConstants.DayCellId);
                         cellButton.text = DateTimePickerData.values[rowIndex].cells[i].dateValue;
                         
                         cellButton.RemoveFromClassList("disabled");
@@ -67,7 +64,7 @@ namespace SerializedCalendar.UI
                         int cellDay = short.Parse(cellButton.text);
 
                         bool isPreviousMonth = (rowIndex == 0 && cellDay > 7);
-                        bool isNextMonth = (rowIndex is 4 or 5 && cellDay < 14);
+                        bool isNextMonth = (rowIndex is 4 or 5 && cellDay <= 14);
                         if (isPreviousMonth || isNextMonth)
                         {
                             cellButton.AddToClassList("disabled");
@@ -86,7 +83,7 @@ namespace SerializedCalendar.UI
                             int daySelected = short.Parse(cellButton.text);
 
                             var next = rowIndex == 0 && cellDay > 7;
-                            var previous = rowIndex is 4 or 5 && cellDay < 14;
+                            var previous = rowIndex is 4 or 5 && cellDay <= 14;
                             if (next)
                                 date = date.AddMonths(-1);
                             else if(previous)
@@ -112,7 +109,7 @@ namespace SerializedCalendar.UI
                         Debug.LogWarning($"Could not find cell template in column : {column.name}");
                         Label fallbackCell = new Label
                         {
-                            name = DayCellId
+                            name = UIConstants.DayCellId
                         };
                         return fallbackCell;
                     }

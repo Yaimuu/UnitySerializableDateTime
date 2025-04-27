@@ -1,0 +1,7 @@
+#yearly-calendar {
+    flex-grow: 1;
+}
+
+#days-picker {
+    flex-grow: 1;
+}

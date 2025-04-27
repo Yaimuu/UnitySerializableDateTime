@@ -1,0 +1,8 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="DateTimePicker" src="project://database/Assets/UI/DateTimePicker.uxml?fileID=9197481963319205126&amp;guid=3ad6e665193a9064c8142e752f8ed5c9&amp;type=3#DateTimePicker" />
+    <Style src="project://database/Assets/UI/Editor/DefaultEditorTheme.uss?fileID=7433441132597879392&amp;guid=5dcf5c4f495c9b641a53836dc06aa20a&amp;type=3#DefaultEditorTheme" />
+    <Style src="project://database/Assets/UI/General.uss?fileID=7433441132597879392&amp;guid=e8c64b81dcf91db47aaff7e0618f7c59&amp;type=3#General" />
+    <Style src="project://database/Assets/UI/Editor/DefaultEditorStyle.uss?fileID=7433441132597879392&amp;guid=b3f91b89d8abff64aa6ff56fde8df6a7&amp;type=3#DefaultEditorStyle" />
+    <engine:TextField label="Text Field" placeholder-text="filler text" name="serialized-date-input" class="date-input" />
+    <engine:Instance template="DateTimePicker" name="calendar-container" focusable="true" class="serialized-calendar-container calendar-root" />
+</engine:UXML>

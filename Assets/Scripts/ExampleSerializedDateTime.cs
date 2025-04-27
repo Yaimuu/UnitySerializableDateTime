@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace SerializedCalendar
 {
@@ -7,5 +7,7 @@ namespace SerializedCalendar
     {
         [SerializeField]
         SerializedDateTime serializedDateTime;
+
+        public string test;
     }
 }

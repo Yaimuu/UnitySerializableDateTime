@@ -1,0 +1,21 @@
+#day-cell {
+    flex-grow: 1;
+    -unity-font-style: bold;
+    font-size: var(--calendar-font-size);
+    -unity-text-align: middle-center;
+    border-width: 0;
+}
+
+#titleLabel {
+    flex-grow: 1;
+    -unity-text-align: middle-center;
+    font-size: var(--calendar-title-font-size);
+}
+
+.selected {
+    background-color: var(--calendar-selected-background);
+}
+
+.disabled {
+    color: var(--calendar-disabled-day-text-color);
+}

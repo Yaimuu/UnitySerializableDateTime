@@ -8,3 +8,55 @@ Label {
     -unity-font-style: bold;
     -unity-text-align: middle-center;
 }
+
+/* Example usage for VisualElements */
+.calendar-root {
+    background-color: var(--calendar-background);
+    border-radius: var(--calendar-border-radius);
+    padding: var(--calendar-padding);
+    font-size: var(--calendar-font-size);
+}
+
+.calendar-root > .calendar-header {
+    background-color: var(--calendar-header-background);
+    color: var(--calendar-header-text-color);
+    -unity-font-style: bold;
+    padding: var(--calendar-padding);
+}
+
+.calendar-root > .calendar-weekdays {
+    background-color: var(--calendar-weekdays-background);
+    color: var(--calendar-weekdays-text-color);
+}
+
+.calendar-root > .calendar-day {
+    width: var(--calendar-day-size);
+    height: var(--calendar-day-size);
+    background-color: var(--calendar-day-background);
+    color: var(--calendar-day-text-color);
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--calendar-border-radius);
+    margin: var(--calendar-gap);
+}
+
+.calendar-root > .calendar-day:hover {
+    background-color: var(--calendar-day-hover-background);
+}
+
+.calendar-root > .calendar-day-today {
+    background-color: var(--calendar-today-background);
+    color: var(--calendar-today-text-color);
+    border-color: var(--calendar-today-border-color);
+}
+
+.calendar-root > .calendar-day-selected {
+    background-color: var(--calendar-selected-background);
+    color: var(--calendar-selected-day-text-color);
+    border-color: var(--calendar-selected-border-color);
+}
+
+.calendar-root > .calendar-day-disabled {
+    color: var(--calendar-disabled-day-text-color);
+    cursor: initial;
+}

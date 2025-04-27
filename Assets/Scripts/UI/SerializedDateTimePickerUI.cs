@@ -37,13 +37,6 @@ namespace SerializedCalendar.UI
                 }
             }
         }
-
-        private const string YearsPickerId = "years-picker";
-        private const string NavTitleId = "nav-title";
-        private const string NavLeftArrowId = "nav-left-arrow";
-        private const string NavRightArrowId = "nav-right-arrow";
-        private const string TextFieldInputId = "serialized-date-input";
-        private const string CalendarContainerId = "calendar-container";
         
         private TextField _dateInput;
 
@@ -105,17 +98,17 @@ namespace SerializedCalendar.UI
         void Init()
         {
             Root.BringToFront();
-            _yearsPicker = Root.Q<MultiColumnListView>(YearsPickerId);
+            _yearsPicker = Root.Q<MultiColumnListView>(UIConstants.YearsPickerId);
             
-            _nextButton = Root.Q<Button>(NavRightArrowId);
-            _previousButton = Root.Q<Button>(NavLeftArrowId);
-            _scopeButton = Root.Q<Button>(NavTitleId);
+            _nextButton = Root.Q<Button>(UIConstants.NavRightArrowId);
+            _previousButton = Root.Q<Button>(UIConstants.NavLeftArrowId);
+            _scopeButton = Root.Q<Button>(UIConstants.NavTitleId);
             _scopeButton.bindingPath = "title";
             _scopeButton.Bind(new SerializedObject(DateTimePickerData));
             
-            _dateInput = Root.Q<TextField>(TextFieldInputId);
+            _dateInput = Root.Q<TextField>(UIConstants.TextFieldInputId);
             
-            _calendarContainer = Root.Q<VisualElement>(CalendarContainerId);
+            _calendarContainer = Root.Q<VisualElement>(UIConstants.CalendarContainerId);
             HideCalendar();
         }
 
