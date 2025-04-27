@@ -2,10 +2,10 @@ using System;
 using System.Globalization;
 using UnityEngine;
 
-namespace SerializableDateTime
+namespace SerializedDateTime
 {
     [Serializable]
-    public class SerializableDateTime
+    public class SerializedDateTime
     {
         [SerializeField] private string dateInput = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         private DateTime _dateTime = DateTime.Now;

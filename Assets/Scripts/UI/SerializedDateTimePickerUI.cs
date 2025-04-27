@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
-namespace SerializableDateTime.UI
+namespace SerializedDateTime.UI
 {
     enum CalendarScope
     {
@@ -47,7 +47,7 @@ namespace SerializableDateTime.UI
         
         private TextField _dateInput;
 
-        private MonthlyCalendarUI _monthlyCalendarUI;
+        private readonly MonthlyCalendarUI _monthlyCalendarUI;
         private MultiColumnListView _yearsPicker;
 
         private Button _scopeButton;

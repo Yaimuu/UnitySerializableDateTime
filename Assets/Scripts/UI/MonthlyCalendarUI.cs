@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
-namespace SerializableDateTime.UI
+namespace SerializedDateTime.UI
 {
     public class MonthlyCalendarUI : BaseDateTimePickerUI
     {
@@ -53,9 +53,9 @@ namespace SerializableDateTime.UI
                     resizable = false,
                     headerTemplate =
                         AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                            "Assets/UI/DaysPicker/DayHeaderCellTemplate.uxml"),
+                            "Assets/UI/MonthlyCalendar/DayHeaderCellTemplate.uxml"),
                     cellTemplate =
-                        AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/DaysPicker/DayTemplate.uxml"),
+                        AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/MonthlyCalendar/DayTemplate.uxml"),
                     bindCell = (element, rowIndex) =>
                     {
                         var cellButton = element.Q<Button>(DayCellId);
@@ -102,7 +102,7 @@ namespace SerializableDateTime.UI
                             DaySelected?.Invoke(date);
                         });
                         
-                        Debug.Log("Cell bound");
+                        // Debug.Log("Cell bound");
                     }
                 };
                 column.makeCell = () =>

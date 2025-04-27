@@ -1,12 +1,12 @@
-using SerializableDateTime.UI;
+using SerializedDateTime.UI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace SerializableDateTime
+namespace SerializedDateTime
 {
-    [CustomPropertyDrawer(typeof(SerializableDateTime))]
-    public class SerializableDateTimePropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(SerializedDateTime))]
+    public class SerializedDateTimePropertyDrawer : PropertyDrawer
     {
         [SerializeField]
         private VisualTreeAsset _visualTreeAsset;
@@ -22,4 +22,3 @@ namespace SerializableDateTime
         }
     }
 }
-

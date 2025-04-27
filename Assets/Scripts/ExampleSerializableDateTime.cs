@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace SerializableDateTime
+namespace SerializedDateTime
 {
     public class ExampleSerializableDateTime : MonoBehaviour
     {
-        [SerializeField]
-        SerializableDateTime serializableDateTime;
+        [FormerlySerializedAs("serializableDateTime")] [SerializeField]
+        SerializedDateTime serializedDateTime;
     }
 }

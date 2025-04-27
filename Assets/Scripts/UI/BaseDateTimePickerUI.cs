@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace SerializableDateTime.UI
+namespace SerializedDateTime.UI
 {
     public abstract class BaseDateTimePickerUI
     {
