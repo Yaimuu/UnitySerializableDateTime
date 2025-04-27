@@ -30,6 +30,10 @@ namespace SerializedCalendar.UI
             _daysPicker = Root.Q<MultiColumnListView>(UIConstants.DaysPickerId);
             _daysPicker.bindingPath = "values";
             _daysPicker.columns.Clear();
+            
+            var headerTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                "Assets/UI/Calendars/HeaderCellTemplate.uxml");
+            var cellTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml");
 
             // Get day names starting from Sunday (default in most cultures)
             List<string> dayNames = CultureInfo.CurrentCulture.DateTimeFormat.DayNames.ToList();
@@ -48,11 +52,8 @@ namespace SerializedCalendar.UI
                     sortable = false,
                     optional = false,
                     resizable = false,
-                    headerTemplate =
-                        AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                            "Assets/UI/Calendars/HeaderCellTemplate.uxml"),
-                    cellTemplate =
-                        AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml"),
+                    headerTemplate = headerTemplate,
+                    cellTemplate = cellTemplate,
                     bindCell = (element, rowIndex) =>
                     {
                         var cellButton = element.Q<Button>(UIConstants.DayCellId);

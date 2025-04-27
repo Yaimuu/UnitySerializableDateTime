@@ -1,3 +1,5 @@
+using UnityEngine.UIElements;
+
 namespace SerializedCalendar.UI
 {
     public static class UIConstants

@@ -41,7 +41,7 @@ namespace SerializedCalendar.UI
         private TextField _dateInput;
 
         private readonly MonthlyCalendarUI _monthlyCalendarUI;
-        private MultiColumnListView _yearsPicker;
+        private readonly YearlyCalendarUI _yearlyCalendarUI;
 
         private Button _scopeButton;
         private Button _nextButton;
@@ -98,7 +98,6 @@ namespace SerializedCalendar.UI
         void Init()
         {
             Root.BringToFront();
-            _yearsPicker = Root.Q<MultiColumnListView>(UIConstants.YearsPickerId);
             
             _nextButton = Root.Q<Button>(UIConstants.NavRightArrowId);
             _previousButton = Root.Q<Button>(UIConstants.NavLeftArrowId);
