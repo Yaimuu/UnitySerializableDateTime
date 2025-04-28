@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace SerializedCalendar.Extension
 {
     public static class DateTimeExtensions
     {
-        public static List<List<int>> GenerateCalendarMatrix(this DateTime dateTime)
+        public static List<List<int>> GenerateMonthlyCalendarMatrix(this DateTime dateTime)
         {
             List<List<int>> matrix = new();
 

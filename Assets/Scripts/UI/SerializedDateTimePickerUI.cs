@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
@@ -10,7 +11,7 @@ using UnityEditor.UIElements;
 
 namespace SerializedCalendar.UI
 {
-    enum CalendarScope
+    public enum CalendarScope
     {
         Time,
         Month,
@@ -31,6 +32,14 @@ namespace SerializedCalendar.UI
                 switch (_scope)
                 {
                     case CalendarScope.Month:
+                        _monthlyCalendarUI.Show();
+                        _yearlyCalendarUI.Hide();
+                        break;
+                    case CalendarScope.Year:
+                    case CalendarScope.Decade:
+                    case CalendarScope.Century:
+                        _yearlyCalendarUI.Show();
+                        _monthlyCalendarUI.Hide();
                         break;
                     default:
                         break;
@@ -89,10 +98,27 @@ namespace SerializedCalendar.UI
             {
                 LastValidDateTime = parsed;
             }
-            
-            _monthlyCalendarUI = new MonthlyCalendarUI(template, LastValidDateTime);
+
+            var calendarContainer = template.Q<TemplateContainer>(UIConstants.CalendarContainerId);
+            _monthlyCalendarUI = new MonthlyCalendarUI(calendarContainer, LastValidDateTime);
+            // _yearlyCalendarUI = new YearlyCalendarUI(calendarContainer, LastValidDateTime);
 
             _monthlyCalendarUI.DaySelected += OnDaySelected;
+            // _yearlyCalendarUI.ScopeChanged += OnScopeChanged;
+            
+            _monthlyCalendarUI.Show();
+            // _yearlyCalendarUI.Hide();
+        }
+
+        private void OnScopeChanged(CalendarScope newScope, string dateString)
+        {
+            Scope = newScope;
+            switch (Scope)
+            {
+                case CalendarScope.Month:
+                    _monthlyCalendarUI.UpdateMonthlyCalendar(DateTime.Parse($"{dateString} {LastValidDateTime:yyyy}"));
+                    break;
+            }
         }
 
         void Init()

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using SerializedCalendar.Extension;
+using SerializedCalendar.Utils;
 using UnityEngine;
 
 namespace SerializedCalendar.UI
@@ -25,6 +27,16 @@ namespace SerializedCalendar.UI
                 return cell;
             });
         }
+        
+        public DateTimeRowData(List<string> row)
+        {
+            cells = row.ConvertAll(cellValue =>
+            {
+                DateTimeCellData cell = ScriptableObject.CreateInstance<DateTimeCellData>();
+                cell.dateValue = cellValue;
+                return cell;
+            });
+        }
     }
     
     public class DateTimePickerData : ScriptableObject
@@ -32,12 +44,30 @@ namespace SerializedCalendar.UI
         public string title = "Date";
         public List<DateTimeRowData> values = new();
 
-        public void UpdateCalendar(DateTime newDate)
+        public void UpdateCalendar(DateTime newDate, CalendarScope scope = CalendarScope.Month)
         {
-            var newValues = newDate.GenerateCalendarMatrix();
             values.Clear();
-            values = newValues.ConvertAll(row => new DateTimeRowData(row));
-            title = $"{newDate:MMMM} {newDate:yyyy}";
+            
+            switch (scope)
+            {
+                case CalendarScope.Time:
+                    break;
+                case CalendarScope.Year:
+                    var newValues = CalendarUtils.GetMonthsMatrix();
+                    values = newValues.ConvertAll(row => new DateTimeRowData(row));
+                    title = $"{newDate:yyyy}";
+                    break;
+                case CalendarScope.Decade:
+                    break;
+                case CalendarScope.Century:
+                    break;
+                case CalendarScope.Month:
+                default:
+                    var newIntValues = newDate.GenerateMonthlyCalendarMatrix();
+                    values = newIntValues.ConvertAll(row => new DateTimeRowData(row));
+                    title = $"{newDate:MMMM} {newDate:yyyy}";
+                    break;
+            }
         }
     }
 }

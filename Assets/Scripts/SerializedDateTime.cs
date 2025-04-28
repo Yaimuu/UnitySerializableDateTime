@@ -7,7 +7,7 @@ namespace SerializedCalendar
     [Serializable]
     public class SerializedDateTime
     {
-        [SerializeField] private string dateInput = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+        [SerializeField] private string dateInput = "01/01/1980";
 
         public DateTime Date
         {

@@ -1,5 +1,7 @@
 using System;
 using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace SerializedCalendar.UI
@@ -8,8 +10,13 @@ namespace SerializedCalendar.UI
     {
         private MultiColumnListView _yearsPicker;
         
-        public YearlyCalendarUI(TemplateContainer template) : base(template)
+        private CalendarScope _scope = CalendarScope.Year;
+        
+        public event UnityAction<CalendarScope, string> ScopeChanged;
+        
+        public YearlyCalendarUI(TemplateContainer template, DateTime date) : base(template)
         {
+            Init(date);
         }
 
         void Init(DateTime date)
@@ -20,15 +27,16 @@ namespace SerializedCalendar.UI
             _yearsPicker.bindingPath = "values";
             _yearsPicker.columns.Clear();
 
-            var headerTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                "Assets/UI/Calendars/HeaderCellTemplate.uxml");
-            var cellTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml");
+            var headerTemplate = 
+                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/HeaderCellTemplate.uxml");
+            var cellTemplate = 
+                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml");
 
             for (int i = 0; i < 4; i++)
             {
                 Column column = new Column
                 {
-                    name = $"day-{i}",
+                    name = $"year-{i}",
                     bindingPath = "dateValue",
                     width = Length.Auto(),
                     stretchable = true,
@@ -39,7 +47,50 @@ namespace SerializedCalendar.UI
                     cellTemplate = cellTemplate,
                     bindCell = (element, rowIndex) =>
                     {
+                        var cellButton = element.Q<Button>(UIConstants.DayCellId);
+                        cellButton.text = DateTimePickerData.values[rowIndex].cells[i].dateValue;
                         
+                        cellButton.RemoveFromClassList("disabled");
+                        cellButton.RemoveFromClassList("selected");
+
+                        switch (_scope)
+                        {
+                            case CalendarScope.Year:
+                                if (cellButton.text.Equals(date.Month.ToString()))
+                                {
+                                    cellButton.AddToClassList("selected");
+                                }
+                                break;
+                            case CalendarScope.Decade:
+                                if (short.Parse(cellButton.text) == date.Year)
+                                {
+                                    cellButton.AddToClassList("selected");
+                                }
+                                break;
+                            case CalendarScope.Century:
+                                if (cellButton.text.Contains(date.Year.ToString().Substring(0, 2)))
+                                {
+                                    cellButton.AddToClassList("selected");
+                                }
+                                break;
+                        }
+
+                        cellButton.clickable = new Clickable((() =>
+                        {
+                            switch (_scope)
+                            {
+                                case CalendarScope.Year:
+                                    _scope = CalendarScope.Month;
+                                    break;
+                                case CalendarScope.Decade:
+                                    _scope = CalendarScope.Year;
+                                    break;
+                                case CalendarScope.Century:
+                                    _scope = CalendarScope.Decade;
+                                    break;
+                            }
+                            ScopeChanged?.Invoke(_scope, cellButton.text);
+                        }));
                     },
                 };
 
@@ -49,6 +100,15 @@ namespace SerializedCalendar.UI
                     return newCell;
                 };
             }
+            
+            var so = new SerializedObject(DateTimePickerData);
+            _yearsPicker.Bind(so);
+        }
+
+        public void UpdateCalendarScope(CalendarScope newScope)
+        {
+            _scope = newScope;
+            
         }
     }
 }

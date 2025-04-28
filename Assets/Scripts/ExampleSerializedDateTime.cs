@@ -8,6 +8,6 @@ namespace SerializedCalendar
         [SerializeField]
         SerializedDateTime serializedDateTime;
 
-        public string test;
+        public string test = DateTime.Parse("november 2024").ToString("o");
     }
 }
