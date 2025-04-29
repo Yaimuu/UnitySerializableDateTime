@@ -2,6 +2,6 @@
     flex-grow: 1;
 }
 
-#days-picker {
+#calendar-weekdays {
     flex-grow: 1;
 }

@@ -28,6 +28,7 @@ namespace SerializedCalendar.UI
             set
             {
                 _scope = value;
+                Debug.Log(_scope);
                 if(_scope == CalendarScope.Century) return;
                 switch (_scope)
                 {
@@ -41,6 +42,7 @@ namespace SerializedCalendar.UI
                         _yearlyCalendarUI.Show();
                         _monthlyCalendarUI.Hide();
                         break;
+                    case CalendarScope.Time:
                     default:
                         break;
                 }
@@ -99,18 +101,19 @@ namespace SerializedCalendar.UI
                 LastValidDateTime = parsed;
             }
 
-            var calendarContainer = template.Q<TemplateContainer>(UIConstants.CalendarContainerId);
-            _monthlyCalendarUI = new MonthlyCalendarUI(calendarContainer, LastValidDateTime);
-            // _yearlyCalendarUI = new YearlyCalendarUI(calendarContainer, LastValidDateTime);
+            var monthlyCalendarContainer = template.Q<TemplateContainer>(UIConstants.DaysPickerId);
+            var yearlyCalendarContainer = template.Q<TemplateContainer>(UIConstants.YearsPickerId);
+            _monthlyCalendarUI = new MonthlyCalendarUI(monthlyCalendarContainer, LastValidDateTime);
+            _yearlyCalendarUI = new YearlyCalendarUI(yearlyCalendarContainer, LastValidDateTime);
 
             _monthlyCalendarUI.DaySelected += OnDaySelected;
-            // _yearlyCalendarUI.ScopeChanged += OnScopeChanged;
+            _yearlyCalendarUI.ScopeChanged += OnYearScopeChanged;
             
-            _monthlyCalendarUI.Show();
-            // _yearlyCalendarUI.Hide();
+            _monthlyCalendarUI.Hide();
+            _yearlyCalendarUI.Hide();
         }
 
-        private void OnScopeChanged(CalendarScope newScope, string dateString)
+        private void OnYearScopeChanged(CalendarScope newScope, string dateString)
         {
             Scope = newScope;
             switch (Scope)
@@ -207,27 +210,31 @@ namespace SerializedCalendar.UI
                     CalendarScope.Decade => CalendarScope.Century,
                     _ => Scope
                 };
+
+                _yearlyCalendarUI.UpdateCalendarScope(LastValidDateTime, Scope);
             }));
         }
 
         void ShowCalendar()
         {
             _calendarContainer.style.display = DisplayStyle.Flex;
+            if (Scope == CalendarScope.Month)
+            {
+                _monthlyCalendarUI?.Show();
+                _yearlyCalendarUI?.Hide();
+            }
+            else
+            {
+                _yearlyCalendarUI?.Show();
+                _monthlyCalendarUI?.Hide();
+            }
         }
 
         void HideCalendar()
         {
             _calendarContainer.style.display = DisplayStyle.None;
-        }
-
-        void UpdateCalendar()
-        {
-            _scopeButton.text = DateTimePickerData.title;
-        }
-
-        void UpdateInput()
-        {
-            
+            _monthlyCalendarUI?.Show();
+            _yearlyCalendarUI?.Hide();
         }
         
         private void OnDaySelected(DateTime newDate)

@@ -1,6 +1,6 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Calendars/Calendar.uss?fileID=7433441132597879392&amp;guid=cbbfb594b62236f4da86b642f2a3442e&amp;type=3#Calendar" />
-    <engine:MultiColumnListView allow-remove="false" show-bound-collection-size="false" allow-add="false" selection-type="None" name="yearly-calendar">
+    <engine:MultiColumnListView allow-remove="false" show-bound-collection-size="false" allow-add="false" selection-type="None" name="yearly-calendar" show-foldout-header="false">
         <engine:Columns reorderable="false" />
     </engine:MultiColumnListView>
 </engine:UXML>

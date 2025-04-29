@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.UIElements;
+#endif
 
 namespace SerializedCalendar.UI
 {
@@ -18,6 +21,16 @@ namespace SerializedCalendar.UI
 
         public event UnityAction<DateTime> DaySelected;
 
+        public override void Show()
+        {
+            Root.Q<MultiColumnListView>(UIConstants.CalendarWeekdaysId).style.display = DisplayStyle.Flex;
+        }
+
+        public override void Hide()
+        {
+            Root.Q<MultiColumnListView>(UIConstants.CalendarWeekdaysId).style.display = DisplayStyle.None;
+        }
+
         public MonthlyCalendarUI(TemplateContainer template, DateTime date) : base(template)
         {
             Init(date);
@@ -27,7 +40,7 @@ namespace SerializedCalendar.UI
         {
             DateTimePickerData.UpdateCalendar(date);
             
-            _daysPicker = Root.Q<MultiColumnListView>(UIConstants.DaysPickerId);
+            _daysPicker = Root.Q<MultiColumnListView>(UIConstants.CalendarWeekdaysId);
             _daysPicker.bindingPath = "values";
             _daysPicker.columns.Clear();
             
