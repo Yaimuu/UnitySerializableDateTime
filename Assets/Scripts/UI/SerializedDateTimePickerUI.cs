@@ -29,7 +29,6 @@ namespace SerializedCalendar.UI
             {
                 _scope = value;
                 
-                // if(_scope == CalendarScope.Century) return;
                 switch (_scope)
                 {
                     case CalendarScope.Month:
