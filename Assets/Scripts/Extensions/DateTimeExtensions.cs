@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace SerializedCalendar.Extension
 {
@@ -31,6 +30,50 @@ namespace SerializedCalendar.Extension
                 matrix.Add(weekRow);
             }
 
+            return matrix;
+        }
+
+        public static List<List<int>> GenerateDecadeCalendarMatrix(this DateTime dateTime)
+        {
+            List<List<int>> matrix = new();
+            
+            // Step 1: Find the start of the decade (e.g., 2025 → 2019)
+            int startYear = (dateTime.Year / 10) * 10 - 1;
+
+            // Step 2: Fill the 3x4 matrix with years
+            for (int row = 0; row < 3; row++)
+            {
+                List<int> rowList = new();
+                for (int col = 0; col < 4; col++)
+                {
+                    int year = startYear + (row * 4) + col;
+                    rowList.Add(year);
+                }
+                matrix.Add(rowList);
+            }
+            
+            return matrix;
+        }
+
+        public static List<List<int>> GenerateCenturyCalendarMatrix(this DateTime dateTime)
+        {
+            List<List<int>> matrix = new();
+            
+            // Step 1: Find the start of the century (e.g., 2025 → 1990)
+            int startDecade = (dateTime.Year / 100) * 100 - 10;
+            
+            // Step 2: Fill the 3x4 matrix with years
+            for (int row = 0; row < 3; row++)
+            {
+                List<int> rowList = new();
+                for (int col = 0; col < 4; col++)
+                {
+                    int year = startDecade + (row * 40) + col * 10;
+                    rowList.Add(year);
+                }
+                matrix.Add(rowList);
+            }
+            
             return matrix;
         }
     }

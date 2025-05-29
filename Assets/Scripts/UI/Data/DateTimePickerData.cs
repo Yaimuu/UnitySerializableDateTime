@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SerializedCalendar.Extension;
 using SerializedCalendar.Utils;
 using UnityEngine;
@@ -42,6 +43,8 @@ namespace SerializedCalendar.UI
     {
         public string title = "Date";
         public List<DateTimeRowData> values = new();
+        
+        public int ColumnCount => values.Count > 0 ? values.First().cells.Count : 0;
 
         public void UpdateCalendar(DateTime newDate, CalendarScope scope = CalendarScope.Month)
         {
@@ -51,21 +54,33 @@ namespace SerializedCalendar.UI
             {
                 case CalendarScope.Time:
                     break;
+
                 case CalendarScope.Year:
-                    var newValues = CalendarUtils.GetMonthsMatrix();
-                    values = newValues.ConvertAll(row => new DateTimeRowData(row));
+                    values = CalendarUtils.GetMonthsMatrix().ConvertAll(row => new DateTimeRowData(row));
                     title = $"{newDate:yyyy}";
                     break;
+
                 case CalendarScope.Decade:
+                    SetRangeTitle(newDate.GenerateDecadeCalendarMatrix());
                     break;
+
                 case CalendarScope.Century:
+                    SetRangeTitle(newDate.GenerateCenturyCalendarMatrix());
                     break;
+
                 case CalendarScope.Month:
                 default:
-                    var newIntValues = newDate.GenerateMonthlyCalendarMatrix();
-                    values = newIntValues.ConvertAll(row => new DateTimeRowData(row));
+                    values = newDate.GenerateMonthlyCalendarMatrix().ConvertAll(row => new DateTimeRowData(row));
                     title = $"{newDate:MMMM} {newDate:yyyy}";
                     break;
+            }
+
+            void SetRangeTitle(List<List<int>> matrix)
+            {
+                values = matrix.ConvertAll(row => new DateTimeRowData(row));
+                var first = values.FirstOrDefault()?.cells.FirstOrDefault()?.dateValue;
+                var last = values.LastOrDefault()?.cells.LastOrDefault()?.dateValue;
+                title = $"{first}-{last}";
             }
         }
     }

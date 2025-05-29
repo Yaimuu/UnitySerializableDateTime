@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -25,7 +26,7 @@ namespace SerializedCalendar.UI
 
         void Init(DateTime date)
         {
-            DateTimePickerData.UpdateCalendar(date, CalendarScope.Year);
+            DateTimePickerData.UpdateCalendar(date, _scope);
             
             _yearsPicker = Root.Q<MultiColumnListView>(UIConstants.YearlyCalendarId);
             _yearsPicker.bindingPath = "values";
@@ -37,7 +38,7 @@ namespace SerializedCalendar.UI
             var cellTemplate = 
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml");
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < DateTimePickerData.ColumnCount; i++)
             {
                 int id = i;
                 Column column = new Column
@@ -68,19 +69,20 @@ namespace SerializedCalendar.UI
                         switch (_scope)
                         {
                             case CalendarScope.Year:
-                                if (cellButton.text.Equals(date.Month.ToString()))
+                                if (cellButton.text.Equals(date.ToString("MMMM")))
                                 {
                                     cellButton.AddToClassList("selected");
                                 }
                                 break;
                             case CalendarScope.Decade:
-                                if (short.Parse(cellButton.text) == date.Year)
+                                bool parsed = short.TryParse(cellButton.text, out short year);
+                                if (parsed && year == date.Year)
                                 {
                                     cellButton.AddToClassList("selected");
                                 }
                                 break;
                             case CalendarScope.Century:
-                                if (cellButton.text.Contains(date.Year.ToString().Substring(0, 2)))
+                                if (cellButton.text.Contains(date.Year.ToString().Substring(0, 3)))
                                 {
                                     cellButton.AddToClassList("selected");
                                 }
@@ -93,14 +95,23 @@ namespace SerializedCalendar.UI
 
                         cellButton.clickable = new Clickable((() =>
                         {
-                            _scope = _scope switch
+                            string dateString = date.ToString(CultureInfo.InvariantCulture);
+                            switch (_scope)
                             {
-                                CalendarScope.Year => CalendarScope.Month,
-                                CalendarScope.Decade => CalendarScope.Year,
-                                CalendarScope.Century => CalendarScope.Decade,
-                                _ => _scope
-                            };
-                            ScopeChanged?.Invoke(_scope, cellButton.text);
+                                case CalendarScope.Year:
+                                    dateString = $"{cellButton.text} {date:yyyy}";
+                                    _scope = CalendarScope.Month;
+                                    break;
+                                case CalendarScope.Decade:
+                                    dateString = $"{date:MMMM} {cellButton.text}";
+                                    _scope = CalendarScope.Year;
+                                    break;
+                                case CalendarScope.Century:
+                                    _scope = CalendarScope.Decade;
+                                    break;
+                            }
+                            Debug.Log(dateString);
+                            ScopeChanged?.Invoke(_scope, dateString);
                         }));
                     },
                 };
@@ -120,11 +131,36 @@ namespace SerializedCalendar.UI
 
         public void UpdateCalendarScope(DateTime date, CalendarScope newScope)
         {
-            _scope = newScope;
-            if(_scope == CalendarScope.Year)
-                Init(date);
+            if(newScope is CalendarScope.Month or CalendarScope.Time) return;
             
-            DateTimePickerData.UpdateCalendar(date, _scope);
+            _scope = newScope;
+            
+            Init(date);
+        }
+        
+        public DateTime Previous(DateTime date)
+        {
+            DateTime newDate = _scope switch
+            {
+                CalendarScope.Year => date.AddYears(-1),
+                CalendarScope.Decade => date.AddYears(-10),
+                CalendarScope.Century => date.AddYears(-100),
+                _ => date
+            };
+            Init(newDate);
+            return newDate;
+        }
+        
+        public DateTime Next(DateTime date) {
+            DateTime newDate = _scope switch
+            {
+                CalendarScope.Year => date.AddYears(1),
+                CalendarScope.Decade => date.AddYears(10),
+                CalendarScope.Century => date.AddYears(100),
+                _ => date
+            };
+            Init(newDate);
+            return newDate;
         }
     }
 }

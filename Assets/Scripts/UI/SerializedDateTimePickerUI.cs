@@ -28,19 +28,21 @@ namespace SerializedCalendar.UI
             set
             {
                 _scope = value;
-                Debug.Log(_scope);
-                if(_scope == CalendarScope.Century) return;
+                
+                // if(_scope == CalendarScope.Century) return;
                 switch (_scope)
                 {
                     case CalendarScope.Month:
                         _monthlyCalendarUI.Show();
                         _yearlyCalendarUI.Hide();
+                        DateTimePickerData.title = _monthlyCalendarUI.Title;
                         break;
                     case CalendarScope.Year:
                     case CalendarScope.Decade:
                     case CalendarScope.Century:
                         _yearlyCalendarUI.Show();
                         _monthlyCalendarUI.Hide();
+                        DateTimePickerData.title = _yearlyCalendarUI.Title;
                         break;
                     case CalendarScope.Time:
                     default:
@@ -70,7 +72,7 @@ namespace SerializedCalendar.UI
             private set
             {
                 _lastValidDateTime = value;
-                DateTimePickerData.UpdateCalendar(_lastValidDateTime);
+                DateTimePickerData.UpdateCalendar(_lastValidDateTime, Scope);
                 _dateInput.value = LastValidDateTime.ToString(CultureInfo.CurrentCulture);
             }
         }
@@ -107,21 +109,41 @@ namespace SerializedCalendar.UI
             _yearlyCalendarUI = new YearlyCalendarUI(yearlyCalendarContainer, LastValidDateTime);
 
             _monthlyCalendarUI.DaySelected += OnDaySelected;
-            _yearlyCalendarUI.ScopeChanged += OnYearScopeChanged;
+            _yearlyCalendarUI.ScopeChanged += OnYearScopeDescends;
             
             _monthlyCalendarUI.Hide();
             _yearlyCalendarUI.Hide();
         }
 
-        private void OnYearScopeChanged(CalendarScope newScope, string dateString)
+        /// <summary>
+        /// Triggered when scope is descending.
+        /// </summary>
+        /// <param name="newScope"></param>
+        /// <param name="dateString"></param>
+        private void OnYearScopeDescends(CalendarScope newScope, string dateString)
         {
+            DateTime newDate;
             Scope = newScope;
-            switch (Scope)
+            switch (newScope)
             {
                 case CalendarScope.Month:
-                    _monthlyCalendarUI.UpdateMonthlyCalendar(DateTime.Parse($"{dateString} {LastValidDateTime:yyyy}"));
+                    Debug.Log(dateString);
+                    newDate = DateTime.Parse(dateString);
+                    _monthlyCalendarUI.UpdateFromYear(newDate);
+                    DateTimePickerData.UpdateCalendar(newDate);
+                    break;
+                case CalendarScope.Year:
+                    newDate = DateTime.Parse(dateString);
+                    _yearlyCalendarUI.UpdateCalendarScope(newDate, newScope);
+                    break;
+                case CalendarScope.Decade:
+                case CalendarScope.Century:
+                    _yearlyCalendarUI.UpdateCalendarScope(LastValidDateTime, newScope);
+                    break;
+                default:
                     break;
             }
+            
         }
 
         void Init()
@@ -188,21 +210,47 @@ namespace SerializedCalendar.UI
             
             _nextButton.clickable = new Clickable(() =>
             {
-                LastValidDateTime = LastValidDateTime.AddMonths(1);
-                _monthlyCalendarUI.Init(LastValidDateTime);
+                switch (Scope)
+                {
+                    case CalendarScope.Month:
+                        LastValidDateTime = _monthlyCalendarUI.Next(LastValidDateTime);
+                        break;
+                    case CalendarScope.Year:
+                    case CalendarScope.Decade:
+                    case CalendarScope.Century:
+                        LastValidDateTime = _yearlyCalendarUI.Next(LastValidDateTime);
+                        break;
+                    case CalendarScope.Time:
+                    default:
+                        break;
+                }
+                
                 DateChanged?.Invoke(LastValidDateTime);
             });
             
             _previousButton.clickable = new Clickable(() =>
             {
-                LastValidDateTime = LastValidDateTime.AddMonths(-1);
-                _monthlyCalendarUI.Init(LastValidDateTime);
+                switch (Scope)
+                {
+                    case CalendarScope.Month:
+                        LastValidDateTime = _monthlyCalendarUI.Previous(LastValidDateTime);
+                        break;
+                    case CalendarScope.Year:
+                    case CalendarScope.Decade:
+                    case CalendarScope.Century:
+                        LastValidDateTime = _yearlyCalendarUI.Previous(LastValidDateTime);
+                        break;
+                    case CalendarScope.Time:
+                    default:
+                        break;
+                }
+                
                 DateChanged?.Invoke(LastValidDateTime);
             });
 
             _scopeButton.clickable = new Clickable((() =>
             {
-                Scope = Scope switch
+                var newScope = Scope switch
                 {
                     CalendarScope.Time => CalendarScope.Month,
                     CalendarScope.Month => CalendarScope.Year,
@@ -211,7 +259,9 @@ namespace SerializedCalendar.UI
                     _ => Scope
                 };
 
-                _yearlyCalendarUI.UpdateCalendarScope(LastValidDateTime, Scope);
+                _yearlyCalendarUI.UpdateCalendarScope(LastValidDateTime, newScope);
+
+                Scope = newScope;
             }));
         }
 
@@ -240,7 +290,6 @@ namespace SerializedCalendar.UI
         private void OnDaySelected(DateTime newDate)
         {
             LastValidDateTime = newDate;
-            
         }
     }
 }

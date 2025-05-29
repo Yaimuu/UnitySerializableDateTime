@@ -8,6 +8,8 @@ namespace SerializedCalendar.UI
         public VisualElement Root { get; protected set; }
         
         protected readonly DateTimePickerData DateTimePickerData;
+        
+        public string Title => DateTimePickerData.title;
 
         protected BaseDateTimePickerUI(TemplateContainer template)
         {

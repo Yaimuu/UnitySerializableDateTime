@@ -145,5 +145,27 @@ namespace SerializedCalendar.UI
             
             DateTimePickerData.UpdateCalendar(newDate);
         }
+
+        public void UpdateFromYear(DateTime newDate)
+        {
+            if(_daysPicker == null) return;
+            
+            DateTimePickerData.UpdateCalendar(newDate);
+            Init(newDate);
+        }
+
+        public DateTime Next(DateTime date)
+        {
+            var newDate = date.AddMonths(1);
+            Init(newDate);
+            return newDate;
+        }
+
+        public DateTime Previous(DateTime date)
+        {
+            var newDate = date.AddMonths(-1);
+            Init(newDate);
+            return newDate;
+        }
     }
 }
