@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using SerializedCalendar.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -11,7 +12,7 @@ using UnityEditor.UIElements;
 
 namespace SerializedCalendar.UI
 {
-    public class YearlyCalendarUI : BaseDateTimePickerUI
+    public class YearlyCalendarUI : BaseCalendarUI
     {
         private MultiColumnListView _yearsPicker;
         
@@ -26,7 +27,7 @@ namespace SerializedCalendar.UI
 
         void Init(DateTime date)
         {
-            DateTimePickerData.UpdateCalendar(date, _scope);
+            CalendarData.UpdateCalendar(date, _scope);
             
             _yearsPicker = Root.Q<MultiColumnListView>(UIConstants.YearlyCalendarId);
             _yearsPicker.bindingPath = "values";
@@ -38,7 +39,7 @@ namespace SerializedCalendar.UI
             var cellTemplate = 
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml");
 
-            for (int i = 0; i < DateTimePickerData.ColumnCount; i++)
+            for (int i = 0; i < CalendarData.ColumnCount; i++)
             {
                 int id = i;
                 Column column = new Column
@@ -61,7 +62,7 @@ namespace SerializedCalendar.UI
                     bindCell = (element, rowIndex) =>
                     {
                         var cellButton = element.Q<Button>(UIConstants.DayCellId);
-                        cellButton.text = DateTimePickerData.values[rowIndex].cells[id].dateValue;
+                        cellButton.text = CalendarData.values[rowIndex].cells[id].dateValue;
                         
                         cellButton.RemoveFromClassList("disabled");
                         cellButton.RemoveFromClassList("selected");
@@ -95,7 +96,7 @@ namespace SerializedCalendar.UI
 
                         cellButton.clickable = new Clickable((() =>
                         {
-                            string dateString = date.ToString(CultureInfo.InvariantCulture);
+                            string dateString = date.ToString(CultureInfo.CurrentCulture);
                             switch (_scope)
                             {
                                 case CalendarScope.Year:
@@ -107,10 +108,11 @@ namespace SerializedCalendar.UI
                                     _scope = CalendarScope.Year;
                                     break;
                                 case CalendarScope.Century:
+                                    dateString = $"{date:MMMM} {cellButton.text}";
                                     _scope = CalendarScope.Decade;
                                     break;
                             }
-                            Debug.Log(dateString);
+                            Debug.Log($"{dateString}");
                             ScopeChanged?.Invoke(_scope, dateString);
                         }));
                     },
@@ -125,7 +127,7 @@ namespace SerializedCalendar.UI
                 _yearsPicker.columns.Add(column);
             }
             
-            var so = new SerializedObject(DateTimePickerData);
+            var so = new SerializedObject(CalendarData);
             _yearsPicker.Bind(so);
         }
 

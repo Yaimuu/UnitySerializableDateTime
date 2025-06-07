@@ -3,18 +3,18 @@ using UnityEngine.UIElements;
 
 namespace SerializedCalendar.UI
 {
-    public abstract class BaseDateTimePickerUI
+    public abstract class BaseCalendarUI
     {
         public VisualElement Root { get; protected set; }
         
-        protected readonly DateTimePickerData DateTimePickerData;
+        protected readonly CalendarData CalendarData;
         
-        public string Title => DateTimePickerData.title;
+        public string Title => CalendarData.title;
 
-        protected BaseDateTimePickerUI(TemplateContainer template)
+        protected BaseCalendarUI(TemplateContainer template)
         {
             Root = template;
-            DateTimePickerData = ScriptableObject.CreateInstance<DateTimePickerData>();
+            CalendarData = ScriptableObject.CreateInstance<CalendarData>();
         }
 
         public virtual void Show()

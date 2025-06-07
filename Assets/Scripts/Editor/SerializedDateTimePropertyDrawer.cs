@@ -15,8 +15,8 @@ namespace SerializedCalendar
         {
             var root = new VisualElement();
             
-            SerializedDateTimePickerUI serializedDateTimePickerUI = new SerializedDateTimePickerUI(_visualTreeAsset.Instantiate(), property);
-            root.Add(serializedDateTimePickerUI.Root);
+            SerializedCalendarUI serializedCalendarUI = new SerializedCalendarUI(_visualTreeAsset.Instantiate(), property);
+            root.Add(serializedCalendarUI.Root);
             
             return root;
         }

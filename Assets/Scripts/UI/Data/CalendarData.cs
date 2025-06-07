@@ -39,7 +39,7 @@ namespace SerializedCalendar.UI
         }
     }
     
-    public class DateTimePickerData : ScriptableObject
+    public class CalendarData : ScriptableObject
     {
         public string title = "Date";
         public List<DateTimeRowData> values = new();

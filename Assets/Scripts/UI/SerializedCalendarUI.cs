@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using UnityEngine;
+using SerializedCalendar.Utils;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
@@ -11,16 +11,10 @@ using UnityEditor.UIElements;
 
 namespace SerializedCalendar.UI
 {
-    public enum CalendarScope
+    public class SerializedCalendarUI : BaseCalendarUI
     {
-        Time,
-        Month,
-        Year,
-        Decade,
-        Century
-    }
-    public class SerializedDateTimePickerUI : BaseDateTimePickerUI
-    {
+        #region Variables
+
         private CalendarScope _scope = CalendarScope.Month;
         private CalendarScope Scope
         {
@@ -34,14 +28,14 @@ namespace SerializedCalendar.UI
                     case CalendarScope.Month:
                         _monthlyCalendarUI.Show();
                         _yearlyCalendarUI.Hide();
-                        DateTimePickerData.title = _monthlyCalendarUI.Title;
+                        CalendarData.title = _monthlyCalendarUI.Title;
                         break;
                     case CalendarScope.Year:
                     case CalendarScope.Decade:
                     case CalendarScope.Century:
                         _yearlyCalendarUI.Show();
                         _monthlyCalendarUI.Hide();
-                        DateTimePickerData.title = _yearlyCalendarUI.Title;
+                        CalendarData.title = _yearlyCalendarUI.Title;
                         break;
                     case CalendarScope.Time:
                     default:
@@ -60,9 +54,9 @@ namespace SerializedCalendar.UI
         private Button _previousButton;
         
         private VisualElement _calendarContainer;
-        
+#if UNITY_EDITOR
         private readonly SerializedProperty _serializedProperty;
-        
+#endif
         private DateTime _lastValidDateTime;
 
         public DateTime LastValidDateTime
@@ -71,16 +65,19 @@ namespace SerializedCalendar.UI
             private set
             {
                 _lastValidDateTime = value;
-                DateTimePickerData.UpdateCalendar(_lastValidDateTime, Scope);
+                CalendarData.UpdateCalendar(_lastValidDateTime, Scope);
                 _dateInput.value = LastValidDateTime.ToString(CultureInfo.CurrentCulture);
             }
         }
+
+        #endregion
         
         public event UnityAction<DateTime> DateChanged;
 
-        private SerializedDateTimePickerUI(TemplateContainer template) : base(template) { }
+        private SerializedCalendarUI(TemplateContainer template) : base(template) { }
 
-        public SerializedDateTimePickerUI(TemplateContainer template, SerializedProperty property) :
+#if UNITY_EDITOR
+        public SerializedCalendarUI(TemplateContainer template, SerializedProperty property) :
             this(template)
         {
             Init();
@@ -97,7 +94,7 @@ namespace SerializedCalendar.UI
             if(dateInputProp.stringValue == string.Empty)
                 _dateInput.value = DateTime.Today.ToString(CultureInfo.CurrentCulture);
 
-            if (DateTime.TryParse(_dateInput.value, null, DateTimeStyles.AssumeUniversal, out var parsed))
+            if (DateTime.TryParse(_dateInput.value, null, DateTimeStyles.AssumeUniversal, out DateTime parsed))
             {
                 LastValidDateTime = parsed;
             }
@@ -113,6 +110,7 @@ namespace SerializedCalendar.UI
             _monthlyCalendarUI.Hide();
             _yearlyCalendarUI.Hide();
         }
+#endif
 
         /// <summary>
         /// Triggered when scope is descending.
@@ -126,26 +124,23 @@ namespace SerializedCalendar.UI
             switch (newScope)
             {
                 case CalendarScope.Month:
-                    Debug.Log(dateString);
                     newDate = DateTime.Parse(dateString);
                     _monthlyCalendarUI.UpdateFromYear(newDate);
-                    DateTimePickerData.UpdateCalendar(newDate);
+                    CalendarData.UpdateCalendar(newDate);
                     break;
                 case CalendarScope.Year:
+                case CalendarScope.Decade:
+                case CalendarScope.Century:
                     newDate = DateTime.Parse(dateString);
                     _yearlyCalendarUI.UpdateCalendarScope(newDate, newScope);
                     break;
-                case CalendarScope.Decade:
-                case CalendarScope.Century:
-                    _yearlyCalendarUI.UpdateCalendarScope(LastValidDateTime, newScope);
-                    break;
+                case CalendarScope.Time:
                 default:
                     break;
             }
-            
         }
 
-        void Init()
+        private void Init()
         {
             Root.BringToFront();
             
@@ -153,16 +148,18 @@ namespace SerializedCalendar.UI
             _previousButton = Root.Q<Button>(UIConstants.NavLeftArrowId);
             _scopeButton = Root.Q<Button>(UIConstants.NavTitleId);
             _scopeButton.bindingPath = "title";
-            _scopeButton.Bind(new SerializedObject(DateTimePickerData));
-            
+#if UNITY_EDITOR
+            _scopeButton.Bind(new SerializedObject(CalendarData));
+#endif
             _dateInput = Root.Q<TextField>(UIConstants.TextFieldInputId);
             
             _calendarContainer = Root.Q<VisualElement>(UIConstants.CalendarContainerId);
             HideCalendar();
         }
 
-        void InitInputEvents()
+        private void InitInputEvents()
         {
+#if UNITY_EDITOR
             _dateInput.RegisterValueChangedCallback(evt =>
             {
                 SerializedProperty dateInputProp = _serializedProperty.FindPropertyRelative("dateInput");
@@ -170,6 +167,7 @@ namespace SerializedCalendar.UI
                 dateInputProp.stringValue = evt.newValue;
                 _serializedProperty.serializedObject.ApplyModifiedProperties();
             });
+#endif
 
             _dateInput.RegisterCallback<ClickEvent>((_) =>
             {
@@ -180,7 +178,7 @@ namespace SerializedCalendar.UI
             _dateInput.RegisterCallback<FocusOutEvent>((_) =>
             {
                 // Optional: try to parse and log result
-                if (DateTime.TryParse(_dateInput.value, null, DateTimeStyles.AssumeLocal, out var parsed))
+                if (DateTime.TryParse(_dateInput.value, null, DateTimeStyles.AssumeLocal, out DateTime parsed))
                 {
                     LastValidDateTime = new DateTime(parsed.Year, parsed.Month, parsed.Day, parsed.Hour, parsed.Minute, 0);
                     _monthlyCalendarUI.UpdateMonthlyCalendar(LastValidDateTime);
@@ -249,7 +247,7 @@ namespace SerializedCalendar.UI
 
             _scopeButton.clickable = new Clickable((() =>
             {
-                var newScope = Scope switch
+                CalendarScope nextScope = Scope switch
                 {
                     CalendarScope.Time => CalendarScope.Month,
                     CalendarScope.Month => CalendarScope.Year,
@@ -258,13 +256,13 @@ namespace SerializedCalendar.UI
                     _ => Scope
                 };
 
-                _yearlyCalendarUI.UpdateCalendarScope(LastValidDateTime, newScope);
-
-                Scope = newScope;
+                _yearlyCalendarUI.UpdateCalendarScope(LastValidDateTime, nextScope);
+                
+                Scope = nextScope;
             }));
         }
 
-        void ShowCalendar()
+        private void ShowCalendar()
         {
             _calendarContainer.style.display = DisplayStyle.Flex;
             if (Scope == CalendarScope.Month)
@@ -279,7 +277,7 @@ namespace SerializedCalendar.UI
             }
         }
 
-        void HideCalendar()
+        private void HideCalendar()
         {
             _calendarContainer.style.display = DisplayStyle.None;
             _monthlyCalendarUI?.Show();

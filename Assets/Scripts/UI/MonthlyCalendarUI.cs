@@ -13,7 +13,7 @@ using UnityEditor.UIElements;
 
 namespace SerializedCalendar.UI
 {
-    public class MonthlyCalendarUI : BaseDateTimePickerUI
+    public class MonthlyCalendarUI : BaseCalendarUI
     {
         private MultiColumnListView _daysPicker;
 
@@ -38,7 +38,7 @@ namespace SerializedCalendar.UI
 
         public void Init(DateTime date)
         {
-            DateTimePickerData.UpdateCalendar(date);
+            CalendarData.UpdateCalendar(date);
             
             _daysPicker = Root.Q<MultiColumnListView>(UIConstants.CalendarWeekdaysId);
             _daysPicker.bindingPath = "values";
@@ -70,7 +70,7 @@ namespace SerializedCalendar.UI
                     bindCell = (element, rowIndex) =>
                     {
                         var cellButton = element.Q<Button>(UIConstants.DayCellId);
-                        cellButton.text = DateTimePickerData.values[rowIndex].cells[i].dateValue;
+                        cellButton.text = CalendarData.values[rowIndex].cells[i].dateValue;
                         
                         cellButton.RemoveFromClassList("disabled");
                         cellButton.RemoveFromClassList("selected");
@@ -112,8 +112,6 @@ namespace SerializedCalendar.UI
 
                             DaySelected?.Invoke(date);
                         });
-                        
-                        // Debug.Log("Cell bound");
                     }
                 };
                 column.makeCell = () =>
@@ -135,7 +133,7 @@ namespace SerializedCalendar.UI
                 _daysPicker.columns.Add(column);
             }
             
-            var so = new SerializedObject(DateTimePickerData);
+            var so = new SerializedObject(CalendarData);
             _daysPicker.Bind(so);
         }
         
@@ -143,27 +141,27 @@ namespace SerializedCalendar.UI
         {
             if(_daysPicker == null) return;
             
-            DateTimePickerData.UpdateCalendar(newDate);
+            CalendarData.UpdateCalendar(newDate);
         }
 
         public void UpdateFromYear(DateTime newDate)
         {
             if(_daysPicker == null) return;
             
-            DateTimePickerData.UpdateCalendar(newDate);
+            CalendarData.UpdateCalendar(newDate);
             Init(newDate);
         }
 
         public DateTime Next(DateTime date)
         {
-            var newDate = date.AddMonths(1);
+            DateTime newDate = date.AddMonths(1);
             Init(newDate);
             return newDate;
         }
 
         public DateTime Previous(DateTime date)
         {
-            var newDate = date.AddMonths(-1);
+            DateTime newDate = date.AddMonths(-1);
             Init(newDate);
             return newDate;
         }

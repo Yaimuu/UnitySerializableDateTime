@@ -8,10 +8,11 @@
     background-color: var(--calendar-nav-button-background);
     border-width: 0;
     color: var(--calendar-header-text-color);
+    -unity-text-align: middle-center;
 }
 
 .nav-arrow:hover {
-    background-color: var(--calendar-nav-button-hover-background)
+    background-color: var(--calendar-nav-button-hover-background);
 }
 
 .calendar-root > Button:active {
@@ -30,6 +31,7 @@
 #nav-title {
     height: 50px;
     padding: 10px 20px;
+    -unity-text-align: middle-center;
 }
 
 .nav-group {
