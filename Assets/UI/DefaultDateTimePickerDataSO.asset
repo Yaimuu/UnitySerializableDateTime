@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e5f372d86e64e09bc9bb49ca0f99e6c, type: 3}
+  m_Name: DefaultDateTimePickerDataSO
+  m_EditorClassIdentifier: 
+  dateTimePickerPanelSettings: {fileID: 11400000, guid: aba86af036202e74581ce8f478a55d68, type: 2}
+  headerTemplate: {fileID: 9197481963319205126, guid: 5cc7f18a396288e49bd8911d7b742cdd, type: 3}
+  cellTemplate: {fileID: 9197481963319205126, guid: 35ce106528c20284dac2f94bed50fb58, type: 3}

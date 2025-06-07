@@ -1,6 +1,5 @@
 using SerializedCalendar.UI;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace SerializedCalendar
@@ -8,7 +7,6 @@ namespace SerializedCalendar
     [CustomPropertyDrawer(typeof(SerializedDateTime))]
     public class SerializedDateTimePropertyDrawer : PropertyDrawer
     {
-        [SerializeField]
         private VisualTreeAsset _visualTreeAsset;
 
         public override VisualElement CreatePropertyGUI(SerializedProperty property)

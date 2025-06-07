@@ -25,7 +25,7 @@ namespace SerializedCalendar.UI
             Init(date);
         }
 
-        void Init(DateTime date)
+        private void Init(DateTime date)
         {
             CalendarData.UpdateCalendar(date, _scope);
             
@@ -34,6 +34,7 @@ namespace SerializedCalendar.UI
             _yearsPicker.columns.Clear();
             _yearsPicker.showFoldoutHeader = false;
 
+            // TODO : Update this using settings
             var headerTemplate = 
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/HeaderCellTemplate.uxml");
             var cellTemplate = 
@@ -53,7 +54,7 @@ namespace SerializedCalendar.UI
                     resizable = false,
                     makeHeader = () =>
                     {
-                        var root = headerTemplate.Instantiate();
+                        TemplateContainer root = headerTemplate.Instantiate();
                         root.style.display = DisplayStyle.None;
                         return root;
                     },

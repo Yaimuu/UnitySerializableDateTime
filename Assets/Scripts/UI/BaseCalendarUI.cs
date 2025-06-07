@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace SerializedCalendar.UI
 {
+    [Serializable]
     public abstract class BaseCalendarUI
     {
         public VisualElement Root { get; protected set; }

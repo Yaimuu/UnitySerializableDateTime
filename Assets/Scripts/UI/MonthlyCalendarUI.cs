@@ -44,6 +44,7 @@ namespace SerializedCalendar.UI
             _daysPicker.bindingPath = "values";
             _daysPicker.columns.Clear();
             
+            // TODO : Use the templates defined in the settings
             var headerTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 "Assets/UI/Calendars/HeaderCellTemplate.uxml");
             var cellTemplate = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml");
@@ -133,11 +134,12 @@ namespace SerializedCalendar.UI
                 _daysPicker.columns.Add(column);
             }
             
+            // TODO : Find another way to bind
             var so = new SerializedObject(CalendarData);
             _daysPicker.Bind(so);
         }
         
-        public void UpdateMonthlyCalendar(DateTime newDate)
+        public void Update(DateTime newDate)
         {
             if(_daysPicker == null) return;
             
