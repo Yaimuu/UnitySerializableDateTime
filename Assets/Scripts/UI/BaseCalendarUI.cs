@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace SerializedCalendar.UI
@@ -9,14 +8,14 @@ namespace SerializedCalendar.UI
     {
         public VisualElement Root { get; protected set; }
         
-        protected readonly CalendarData CalendarData;
+        protected readonly CalendarData CalendarDataSource;
         
-        public string Title => CalendarData.title;
+        public string Title => CalendarDataSource.title;
 
         protected BaseCalendarUI(TemplateContainer template)
         {
             Root = template;
-            CalendarData = ScriptableObject.CreateInstance<CalendarData>();
+            CalendarDataSource = new CalendarData();
         }
 
         public virtual void Show()

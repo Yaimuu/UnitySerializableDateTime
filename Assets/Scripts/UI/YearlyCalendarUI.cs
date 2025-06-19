@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.UIElements;
 #endif
 
 namespace SerializedCalendar.UI
@@ -27,12 +26,9 @@ namespace SerializedCalendar.UI
 
         private void Init(DateTime date)
         {
-            CalendarData.UpdateCalendar(date, _scope);
-            
             _yearsPicker = Root.Q<MultiColumnListView>(UIConstants.YearlyCalendarId);
-            _yearsPicker.bindingPath = "values";
-            _yearsPicker.columns.Clear();
             _yearsPicker.showFoldoutHeader = false;
+            _yearsPicker.columns.Clear();
 
             // TODO : Update this using settings
             var headerTemplate = 
@@ -40,7 +36,7 @@ namespace SerializedCalendar.UI
             var cellTemplate = 
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Calendars/CellTemplate.uxml");
 
-            for (int i = 0; i < CalendarData.ColumnCount; i++)
+            for (int i = 0; i < CalendarDataSource.ColumnCount; i++)
             {
                 int id = i;
                 Column column = new Column
@@ -63,7 +59,7 @@ namespace SerializedCalendar.UI
                     bindCell = (element, rowIndex) =>
                     {
                         var cellButton = element.Q<Button>(UIConstants.DayCellId);
-                        cellButton.text = CalendarData.values[rowIndex].cells[id].dateValue;
+                        cellButton.text = CalendarDataSource.values[rowIndex].cells[id].dateValue;
                         
                         cellButton.RemoveFromClassList("disabled");
                         cellButton.RemoveFromClassList("selected");
@@ -113,7 +109,6 @@ namespace SerializedCalendar.UI
                                     _scope = CalendarScope.Decade;
                                     break;
                             }
-                            Debug.Log($"{dateString}");
                             ScopeChanged?.Invoke(_scope, dateString);
                         }));
                     },
@@ -127,9 +122,8 @@ namespace SerializedCalendar.UI
                 
                 _yearsPicker.columns.Add(column);
             }
-            
-            var so = new SerializedObject(CalendarData);
-            _yearsPicker.Bind(so);
+
+            Update(date);
         }
 
         public void UpdateCalendarScope(DateTime date, CalendarScope newScope)
@@ -137,8 +131,17 @@ namespace SerializedCalendar.UI
             if(newScope is CalendarScope.Month or CalendarScope.Time) return;
             
             _scope = newScope;
-            
+
             Init(date);
+        }
+
+        public void Update(DateTime date)
+        {
+            if(_yearsPicker == null) return;
+            
+            CalendarDataSource.UpdateCalendar(date, _scope);
+            _yearsPicker.itemsSource = CalendarDataSource.Values;
+            _yearsPicker.Rebuild();
         }
         
         public DateTime Previous(DateTime date)
@@ -150,7 +153,7 @@ namespace SerializedCalendar.UI
                 CalendarScope.Century => date.AddYears(-100),
                 _ => date
             };
-            Init(newDate);
+            Update(newDate);
             return newDate;
         }
         
@@ -162,7 +165,7 @@ namespace SerializedCalendar.UI
                 CalendarScope.Century => date.AddYears(100),
                 _ => date
             };
-            Init(newDate);
+            Update(newDate);
             return newDate;
         }
     }

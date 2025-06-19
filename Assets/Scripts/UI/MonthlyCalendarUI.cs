@@ -8,7 +8,6 @@ using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.UIElements;
 #endif
 
 namespace SerializedCalendar.UI
@@ -23,11 +22,13 @@ namespace SerializedCalendar.UI
 
         public override void Show()
         {
+            base.Show();
             Root.Q<MultiColumnListView>(UIConstants.CalendarWeekdaysId).style.display = DisplayStyle.Flex;
         }
 
         public override void Hide()
         {
+            base.Hide();
             Root.Q<MultiColumnListView>(UIConstants.CalendarWeekdaysId).style.display = DisplayStyle.None;
         }
 
@@ -38,10 +39,9 @@ namespace SerializedCalendar.UI
 
         public void Init(DateTime date)
         {
-            CalendarData.UpdateCalendar(date);
+            // CalendarDataSource.UpdateCalendar(date);
             
             _daysPicker = Root.Q<MultiColumnListView>(UIConstants.CalendarWeekdaysId);
-            _daysPicker.bindingPath = "values";
             _daysPicker.columns.Clear();
             
             // TODO : Use the templates defined in the settings
@@ -71,7 +71,7 @@ namespace SerializedCalendar.UI
                     bindCell = (element, rowIndex) =>
                     {
                         var cellButton = element.Q<Button>(UIConstants.DayCellId);
-                        cellButton.text = CalendarData.values[rowIndex].cells[i].dateValue;
+                        cellButton.text = CalendarDataSource.values[rowIndex].cells[i].dateValue;
                         
                         cellButton.RemoveFromClassList("disabled");
                         cellButton.RemoveFromClassList("selected");
@@ -134,37 +134,39 @@ namespace SerializedCalendar.UI
                 _daysPicker.columns.Add(column);
             }
             
-            // TODO : Find another way to bind
-            var so = new SerializedObject(CalendarData);
-            _daysPicker.Bind(so);
+            Update(date);
         }
         
         public void Update(DateTime newDate)
         {
             if(_daysPicker == null) return;
             
-            CalendarData.UpdateCalendar(newDate);
+            CalendarDataSource.UpdateCalendar(newDate);
+            _daysPicker.itemsSource = CalendarDataSource.Values;
+            _daysPicker.Rebuild();
         }
 
         public void UpdateFromYear(DateTime newDate)
         {
             if(_daysPicker == null) return;
             
-            CalendarData.UpdateCalendar(newDate);
+            CalendarDataSource.UpdateCalendar(newDate);
             Init(newDate);
         }
 
         public DateTime Next(DateTime date)
         {
             DateTime newDate = date.AddMonths(1);
-            Init(newDate);
+            // Init(newDate);
+            Update(newDate);
             return newDate;
         }
 
         public DateTime Previous(DateTime date)
         {
             DateTime newDate = date.AddMonths(-1);
-            Init(newDate);
+            // Init(newDate);
+            Update(newDate);
             return newDate;
         }
     }

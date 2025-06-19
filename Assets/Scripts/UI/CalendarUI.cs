@@ -1,12 +1,8 @@
 using System;
 using SerializedCalendar.Utils;
+using Unity.Properties;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
-
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.UIElements;
-#endif
 
 namespace SerializedCalendar.UI
 {
@@ -27,14 +23,14 @@ namespace SerializedCalendar.UI
                     case CalendarScope.Month:
                         _monthlyCalendarUI.Show();
                         _yearlyCalendarUI.Hide();
-                        CalendarData.title = _monthlyCalendarUI.Title;
+                        _scopeButton.text = _monthlyCalendarUI.Title;
                         break;
                     case CalendarScope.Year:
                     case CalendarScope.Decade:
                     case CalendarScope.Century:
                         _yearlyCalendarUI.Show();
                         _monthlyCalendarUI.Hide();
-                        CalendarData.title = _yearlyCalendarUI.Title;
+                        _scopeButton.text = _yearlyCalendarUI.Title;
                         break;
                     case CalendarScope.Time:
                     default:
@@ -61,7 +57,13 @@ namespace SerializedCalendar.UI
             set
             {
                 _currentDate = value;
-                CalendarData.UpdateCalendar(_currentDate, Scope);
+                CalendarDataSource.UpdateCalendar(_currentDate, Scope);
+                // _scopeButton?.SetBinding(nameof(_scopeButton.text), new DataBinding()
+                // {
+                //     dataSourcePath = PropertyPath.FromName(nameof(CalendarDataSource.Title)),
+                //     dataSource = CalendarDataSource
+                // });
+                _scopeButton.text = CalendarDataSource.title;
                 DateChanged?.Invoke(_currentDate);
             }
         }
@@ -101,13 +103,12 @@ namespace SerializedCalendar.UI
         private void OnYearScopeDescends(CalendarScope newScope, string dateString)
         {
             DateTime newDate;
-            Scope = newScope;
             switch (newScope)
             {
                 case CalendarScope.Month:
                     newDate = DateTime.Parse(dateString);
                     _monthlyCalendarUI.UpdateFromYear(newDate);
-                    CalendarData.UpdateCalendar(newDate);
+                    CalendarDataSource.UpdateCalendar(newDate);
                     break;
                 case CalendarScope.Year:
                 case CalendarScope.Decade:
@@ -119,6 +120,7 @@ namespace SerializedCalendar.UI
                 default:
                     break;
             }
+            Scope = newScope;
         }
 
         private void Init()
@@ -128,10 +130,7 @@ namespace SerializedCalendar.UI
             _nextButton = Root.Q<Button>(UIConstants.NavRightArrowId);
             _previousButton = Root.Q<Button>(UIConstants.NavLeftArrowId);
             _scopeButton = Root.Q<Button>(UIConstants.NavTitleId);
-            _scopeButton.bindingPath = "title";
-#if UNITY_EDITOR
-            _scopeButton.Bind(new SerializedObject(CalendarData));
-#endif
+            
             Hide();
         }
 
@@ -140,7 +139,7 @@ namespace SerializedCalendar.UI
             _nextButton.clickable = new Clickable(() =>
             {
                 switch (Scope)
-                {
+                { 
                     case CalendarScope.Month:
                         CurrentDate = _monthlyCalendarUI.Next(CurrentDate);
                         break;

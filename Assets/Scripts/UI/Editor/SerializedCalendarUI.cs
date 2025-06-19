@@ -31,6 +31,7 @@ namespace SerializedCalendar.UI
         }
 
         #endregion
+        
         public SerializedCalendarUI(TemplateContainer template, SerializedProperty property)
         {
             Root = template;
@@ -78,6 +79,12 @@ namespace SerializedCalendar.UI
                 // Update serialized property
                 dateInputProp.stringValue = evt.newValue;
                 _serializedProperty.serializedObject.ApplyModifiedProperties();
+                
+                if (DateTime.TryParse(_dateInput.value, null, DateTimeStyles.AssumeLocal, out DateTime parsed))
+                {
+                    LastValidDateTime = new DateTime(parsed.Year, parsed.Month, parsed.Day, parsed.Hour, parsed.Minute, 0);
+                    _calendar.Monthly.Update(LastValidDateTime);
+                }
             });
 
             _dateInput.RegisterCallback<ClickEvent>((_) =>
@@ -91,14 +98,13 @@ namespace SerializedCalendar.UI
                 // Optional: try to parse and log result
                 if (DateTime.TryParse(_dateInput.value, null, DateTimeStyles.AssumeLocal, out DateTime parsed))
                 {
-                    LastValidDateTime = new DateTime(parsed.Year, parsed.Month, parsed.Day, parsed.Hour, parsed.Minute, 0);
-                    _calendar.Monthly.Update(LastValidDateTime);
+                    // LastValidDateTime = new DateTime(parsed.Year, parsed.Month, parsed.Day, parsed.Hour, parsed.Minute, 0);
+                    // _calendar.Monthly.Update(LastValidDateTime);
+                    return;
                 }
-                else
-                {
-                    // Invalid date format
-                    _dateInput.value = LastValidDateTime.ToString(CultureInfo.CurrentCulture);
-                }
+                
+                // Invalid date format
+                _dateInput.value = LastValidDateTime.ToString(CultureInfo.CurrentCulture);
             });
             
             _calendarContainer.RegisterCallback<ClickEvent>((_) =>
